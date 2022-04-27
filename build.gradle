@@ -6,7 +6,7 @@ plugins {
 sourceCompatibility = 1.16
 targetCompatibility = 1.16
 
-group 'honeyroasted.cello'
+group 'io.github.socraticphoenix.matrix'
 version '0.0.0'
 
 repositories {
@@ -15,12 +15,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.ow2.asm:asm:9.2",
-            "org.ow2.asm:asm-commons:9.2",
-            "com.github.HoneyRoasted:JavaType:1.0.12")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.2",
-            "org.ow2.asm:asm-util:9.2")
 }
 
 task ghpagesJavadocs(type: Javadoc) {

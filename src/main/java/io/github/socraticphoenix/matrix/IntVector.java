@@ -33,8 +33,25 @@ public class IntVector {
         this.nums = nums;
     }
 
+    public long product() {
+        int prod = 1;
+        for (int i = a; i < this.b; i++) {
+            prod *= this.nums[i];
+        }
+        return prod;
+    }
+
     public IntVector concat(int... vals) {
-        return concat(IntVector.of(vals));
+        int[] res = new int[this.size() + vals.length];
+        for (int i = 0; i < this.size(); i++) {
+            res[i] = this.get(i);
+        }
+
+        for (int i = 0; i < vals.length; i++) {
+            res[i + this.size()] = vals[i];
+        }
+
+        return new IntVector(0,  res.length, res);
     }
 
     public IntVector concat(IntVector other) {
@@ -47,7 +64,7 @@ public class IntVector {
             res[i + this.size()] = other.get(i);
         }
 
-        return new IntVector(0, this.size() + other.size(), res);
+        return new IntVector(0, res.length, res);
     }
 
     public IntVector add(IntVector other) {
@@ -58,6 +75,10 @@ public class IntVector {
         return map(a -> a + scalar);
     }
 
+    public IntVector add(int index, int scalar) {
+        return map(index, v -> v + scalar);
+    }
+
     public IntVector subtract(IntVector other) {
         return map(other, (a, b) -> a - b);
     }
@@ -66,12 +87,20 @@ public class IntVector {
         return map(a -> a - scalar);
     }
 
+    public IntVector subtract(int index, int scalar) {
+        return map(index, v -> v - scalar);
+    }
+
+    public IntVector set(int index, int value) {
+        return map(index, v -> value);
+    }
+
     public IntVector map(IntVector other, IntBinaryOperator op) {
         int[] result = new int[this.b - a];
         for (int i = 0; i < this.size(); i++) {
             result[i] = op.applyAsInt(this.get(i), other.get(i));
         }
-        return IntVector.of(result);
+        return new IntVector(0, result.length, result);
     }
 
     public IntVector map(IntUnaryOperator op) {
@@ -79,7 +108,13 @@ public class IntVector {
         for (int i = 0; i < this.size(); i++) {
             result[i] = op.applyAsInt(this.get(i));
         }
-        return IntVector.of(result);
+        return new IntVector(0, result.length, result);
+    }
+
+    public IntVector map(int index, IntUnaryOperator op) {
+        int[] result = this.toArray();
+        result[index] = op.applyAsInt(result[index]);
+        return new IntVector(0, result.length, result);
     }
 
     private void check(IntVector other) {
