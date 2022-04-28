@@ -21,6 +21,12 @@ public class IntVector {
         return IntVector.of(new int[size]);
     }
 
+    public static IntVector ones(int size) {
+        int[] arr = new int[size];
+        Arrays.fill(arr, 1);
+        return IntVector.of(size);
+    }
+
     public IntVector(int[] nums) {
         this.nums = Arrays.copyOf(nums, nums.length);
         this.a = 0;
@@ -68,7 +74,7 @@ public class IntVector {
     }
 
     public IntVector add(IntVector other) {
-        return map(other, (a, b) -> a + b);
+        return biMap(other, (a, b) -> a + b);
     }
 
     public IntVector add(int scalar) {
@@ -80,7 +86,7 @@ public class IntVector {
     }
 
     public IntVector subtract(IntVector other) {
-        return map(other, (a, b) -> a - b);
+        return biMap(other, (a, b) -> a - b);
     }
 
     public IntVector subtract(int scalar) {
@@ -95,7 +101,7 @@ public class IntVector {
         return map(index, v -> value);
     }
 
-    public IntVector map(IntVector other, IntBinaryOperator op) {
+    public IntVector biMap(IntVector other, IntBinaryOperator op) {
         int[] result = new int[this.b - a];
         for (int i = 0; i < this.size(); i++) {
             result[i] = op.applyAsInt(this.get(i), other.get(i));

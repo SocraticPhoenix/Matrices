@@ -1,9 +1,6 @@
 package io.github.socraticphoenix.matrix.handlers;
 
-import io.github.socraticphoenix.matrix.RowHandler;
 import io.github.socraticphoenix.matrix.function.FromDouble;
-
-import java.util.Arrays;
 
 public class DoubleRowHandler implements RowHandler<Double, double[], 
         FromDouble.ToDouble,

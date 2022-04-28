@@ -1,8 +1,6 @@
 package io.github.socraticphoenix.matrix.handlers;
 
-import io.github.socraticphoenix.matrix.RowHandler;
 import io.github.socraticphoenix.matrix.function.FromBoolean;
-import io.github.socraticphoenix.matrix.function.FromObject;
 
 public class BoolRowHandler implements RowHandler<Boolean, boolean[],
         FromBoolean.ToBoolean,

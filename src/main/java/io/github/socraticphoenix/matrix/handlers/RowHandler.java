@@ -1,4 +1,4 @@
-package io.github.socraticphoenix.matrix;
+package io.github.socraticphoenix.matrix.handlers;
 
 public interface RowHandler<T, A, TO_SELF,
         TO_OBJECT, TO_VOID, TO_BOOL, TO_BYTE, 
