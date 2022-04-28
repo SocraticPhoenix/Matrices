@@ -3,65 +3,115 @@ package io.github.socraticphoenix.matrix.handlers;
 import io.github.socraticphoenix.matrix.RowHandler;
 import io.github.socraticphoenix.matrix.function.*;
 
+import java.util.Objects;
+
 public class ObjectRowHandler implements RowHandler<Object, Object[],
+        FromObject.ToObject,
         FromObject.ToObject, FromObject.ToVoid, FromObject.ToBoolean,
         FromObject.ToByte, FromObject.ToShort, FromObject.ToChar,
         FromObject.ToInt, FromObject.ToLong, FromObject.ToFloat,
         FromObject.ToDouble,
 
+        FromObject.AndObject.ToObject,
         FromObject.AndObject.ToObject, FromObject.AndObject.ToBoolean,
         FromObject.AndObject.ToByte, FromObject.AndObject.ToShort,
         FromObject.AndObject.ToChar, FromObject.AndObject.ToInt,
         FromObject.AndObject.ToLong, FromObject.AndObject.ToFloat,
         FromObject.AndObject.ToDouble,
 
+        FromObject.AndObject.ToObject,
+        FromObject.AndObject.ToObject, FromObject.AndObject.ToBoolean,
+        FromObject.AndObject.ToByte, FromObject.AndObject.ToShort,
+        FromObject.AndObject.ToChar, FromObject.AndObject.ToInt,
+        FromObject.AndObject.ToLong, FromObject.AndObject.ToFloat,
+        FromObject.AndObject.ToDouble,
+
+        FromObject.AndBoolean.ToObject,
         FromObject.AndBoolean.ToObject, FromObject.AndBoolean.ToBoolean,
         FromObject.AndBoolean.ToByte, FromObject.AndBoolean.ToShort,
         FromObject.AndBoolean.ToChar, FromObject.AndBoolean.ToInt,
         FromObject.AndBoolean.ToLong, FromObject.AndBoolean.ToFloat,
         FromObject.AndBoolean.ToDouble,
 
+        FromObject.AndByte.ToObject,
         FromObject.AndByte.ToObject, FromObject.AndByte.ToBoolean,
         FromObject.AndByte.ToByte, FromObject.AndByte.ToShort,
         FromObject.AndByte.ToChar, FromObject.AndByte.ToInt,
         FromObject.AndByte.ToLong, FromObject.AndByte.ToFloat,
         FromObject.AndByte.ToDouble,
 
+        FromObject.AndShort.ToObject,
         FromObject.AndShort.ToObject, FromObject.AndShort.ToBoolean,
         FromObject.AndShort.ToByte, FromObject.AndShort.ToShort,
         FromObject.AndShort.ToChar, FromObject.AndShort.ToInt,
         FromObject.AndShort.ToLong, FromObject.AndShort.ToFloat,
         FromObject.AndShort.ToDouble,
 
+        FromObject.AndChar.ToObject,
         FromObject.AndChar.ToObject, FromObject.AndChar.ToBoolean,
         FromObject.AndChar.ToByte, FromObject.AndChar.ToShort,
         FromObject.AndChar.ToChar, FromObject.AndChar.ToInt,
         FromObject.AndChar.ToLong, FromObject.AndChar.ToFloat,
         FromObject.AndChar.ToDouble,
 
+        FromObject.AndInt.ToObject,
         FromObject.AndInt.ToObject, FromObject.AndInt.ToBoolean,
         FromObject.AndInt.ToByte, FromObject.AndInt.ToShort,
         FromObject.AndInt.ToChar, FromObject.AndInt.ToInt,
         FromObject.AndInt.ToLong, FromObject.AndInt.ToFloat,
         FromObject.AndInt.ToDouble,
 
+        FromObject.AndLong.ToObject,
         FromObject.AndLong.ToObject, FromObject.AndLong.ToBoolean,
         FromObject.AndLong.ToByte, FromObject.AndLong.ToShort,
         FromObject.AndLong.ToChar, FromObject.AndLong.ToInt,
         FromObject.AndLong.ToLong, FromObject.AndLong.ToFloat,
         FromObject.AndLong.ToDouble,
 
+        FromObject.AndFloat.ToObject,
         FromObject.AndFloat.ToObject, FromObject.AndFloat.ToBoolean,
         FromObject.AndFloat.ToByte, FromObject.AndFloat.ToShort,
         FromObject.AndFloat.ToChar, FromObject.AndFloat.ToInt,
         FromObject.AndFloat.ToLong, FromObject.AndFloat.ToFloat,
         FromObject.AndFloat.ToDouble,
 
+        FromObject.AndDouble.ToObject,
         FromObject.AndDouble.ToObject, FromObject.AndDouble.ToBoolean,
         FromObject.AndDouble.ToByte, FromObject.AndDouble.ToShort,
         FromObject.AndDouble.ToChar, FromObject.AndDouble.ToInt,
         FromObject.AndDouble.ToLong, FromObject.AndDouble.ToFloat,
         FromObject.AndDouble.ToDouble> {
+
+    @Override
+    public int hashCode(Object[] row, int from, int to) {
+        int res = 0;
+        for (int i = from; i < to; i++) {
+            res = 31 * res + Objects.hashCode(row[i]);
+        }
+        return res;
+    }
+
+    @Override
+    public String toString(Object[] row, int from, int to) {
+        StringBuilder sb = new StringBuilder().append("[");
+        for (int i = from; i < to; i++) {
+            sb.append(row[i]);
+            if (i < to - 1) {
+                sb.append(", ");
+            }
+        }
+        return sb.append("]").toString();
+    }
+
+    @Override
+    public boolean equals(Object[] rowA, int fromA, int toA, Object[] rowB, int fromB) {
+        for (int i = fromA; i < toA; i++) {
+            if (!Objects.equals(rowA[i], rowB[fromB + (i - fromA)])) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     @Override
     public Object get(Object[] row, int index) {

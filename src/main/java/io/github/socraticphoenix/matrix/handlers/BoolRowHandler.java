@@ -2,66 +2,115 @@ package io.github.socraticphoenix.matrix.handlers;
 
 import io.github.socraticphoenix.matrix.RowHandler;
 import io.github.socraticphoenix.matrix.function.FromBoolean;
+import io.github.socraticphoenix.matrix.function.FromObject;
 
 public class BoolRowHandler implements RowHandler<Boolean, boolean[],
+        FromBoolean.ToBoolean,
         FromBoolean.ToObject, FromBoolean.ToVoid, FromBoolean.ToBoolean,
         FromBoolean.ToByte, FromBoolean.ToShort, FromBoolean.ToChar,
         FromBoolean.ToInt, FromBoolean.ToLong, FromBoolean.ToFloat,
         FromBoolean.ToDouble,
 
-        FromBoolean.AndObject.ToObject, FromBoolean.AndObject.ToBoolean,
-        FromBoolean.AndObject.ToByte, FromBoolean.AndObject.ToShort,
-        FromBoolean.AndObject.ToChar, FromBoolean.AndObject.ToInt,
-        FromBoolean.AndObject.ToLong, FromBoolean.AndObject.ToFloat,
-        FromBoolean.AndObject.ToDouble,
-
+        FromBoolean.AndBoolean.ToBoolean,
         FromBoolean.AndBoolean.ToObject, FromBoolean.AndBoolean.ToBoolean,
         FromBoolean.AndBoolean.ToByte, FromBoolean.AndBoolean.ToShort,
         FromBoolean.AndBoolean.ToChar, FromBoolean.AndBoolean.ToInt,
         FromBoolean.AndBoolean.ToLong, FromBoolean.AndBoolean.ToFloat,
         FromBoolean.AndBoolean.ToDouble,
 
+        FromBoolean.AndObject.ToBoolean,
+        FromBoolean.AndObject.ToObject, FromBoolean.AndObject.ToBoolean,
+        FromBoolean.AndObject.ToByte, FromBoolean.AndObject.ToShort,
+        FromBoolean.AndObject.ToChar, FromBoolean.AndObject.ToInt,
+        FromBoolean.AndObject.ToLong, FromBoolean.AndObject.ToFloat,
+        FromBoolean.AndObject.ToDouble,
+
+        FromBoolean.AndBoolean.ToBoolean,
+        FromBoolean.AndBoolean.ToObject, FromBoolean.AndBoolean.ToBoolean,
+        FromBoolean.AndBoolean.ToByte, FromBoolean.AndBoolean.ToShort,
+        FromBoolean.AndBoolean.ToChar, FromBoolean.AndBoolean.ToInt,
+        FromBoolean.AndBoolean.ToLong, FromBoolean.AndBoolean.ToFloat,
+        FromBoolean.AndBoolean.ToDouble,
+
+        FromBoolean.AndByte.ToBoolean,
         FromBoolean.AndByte.ToObject, FromBoolean.AndByte.ToBoolean,
         FromBoolean.AndByte.ToByte, FromBoolean.AndByte.ToShort,
         FromBoolean.AndByte.ToChar, FromBoolean.AndByte.ToInt,
         FromBoolean.AndByte.ToLong, FromBoolean.AndByte.ToFloat,
         FromBoolean.AndByte.ToDouble,
 
+        FromBoolean.AndShort.ToBoolean,
         FromBoolean.AndShort.ToObject, FromBoolean.AndShort.ToBoolean,
         FromBoolean.AndShort.ToByte, FromBoolean.AndShort.ToShort,
         FromBoolean.AndShort.ToChar, FromBoolean.AndShort.ToInt,
         FromBoolean.AndShort.ToLong, FromBoolean.AndShort.ToFloat,
         FromBoolean.AndShort.ToDouble,
 
+        FromBoolean.AndChar.ToBoolean,
         FromBoolean.AndChar.ToObject, FromBoolean.AndChar.ToBoolean,
         FromBoolean.AndChar.ToByte, FromBoolean.AndChar.ToShort,
         FromBoolean.AndChar.ToChar, FromBoolean.AndChar.ToInt,
         FromBoolean.AndChar.ToLong, FromBoolean.AndChar.ToFloat,
         FromBoolean.AndChar.ToDouble,
 
+        FromBoolean.AndInt.ToBoolean,
         FromBoolean.AndInt.ToObject, FromBoolean.AndInt.ToBoolean,
         FromBoolean.AndInt.ToByte, FromBoolean.AndInt.ToShort,
         FromBoolean.AndInt.ToChar, FromBoolean.AndInt.ToInt,
         FromBoolean.AndInt.ToLong, FromBoolean.AndInt.ToFloat,
         FromBoolean.AndInt.ToDouble,
 
+        FromBoolean.AndLong.ToBoolean,
         FromBoolean.AndLong.ToObject, FromBoolean.AndLong.ToBoolean,
         FromBoolean.AndLong.ToByte, FromBoolean.AndLong.ToShort,
         FromBoolean.AndLong.ToChar, FromBoolean.AndLong.ToInt,
         FromBoolean.AndLong.ToLong, FromBoolean.AndLong.ToFloat,
         FromBoolean.AndLong.ToDouble,
 
+        FromBoolean.AndFloat.ToBoolean,
         FromBoolean.AndFloat.ToObject, FromBoolean.AndFloat.ToBoolean,
         FromBoolean.AndFloat.ToByte, FromBoolean.AndFloat.ToShort,
         FromBoolean.AndFloat.ToChar, FromBoolean.AndFloat.ToInt,
         FromBoolean.AndFloat.ToLong, FromBoolean.AndFloat.ToFloat,
         FromBoolean.AndFloat.ToDouble,
 
+        FromBoolean.AndDouble.ToBoolean,
         FromBoolean.AndDouble.ToObject, FromBoolean.AndDouble.ToBoolean,
         FromBoolean.AndDouble.ToByte, FromBoolean.AndDouble.ToShort,
         FromBoolean.AndDouble.ToChar, FromBoolean.AndDouble.ToInt,
         FromBoolean.AndDouble.ToLong, FromBoolean.AndDouble.ToFloat,
         FromBoolean.AndDouble.ToDouble> {
+
+    @Override
+    public int hashCode(boolean[] row, int from, int to) {
+        int res = 0;
+        for (int i = from; i < to; i++) {
+            res = 31 * res + (row[i] ? 1231 : 1237);
+        }
+        return res;
+    }
+
+    @Override
+    public String toString(boolean[] row, int from, int to) {
+        StringBuilder sb = new StringBuilder().append("[");
+        for (int i = from; i < to; i++) {
+            sb.append(row[i]);
+            if (i < to - 1) {
+                sb.append(", ");
+            }
+        }
+        return sb.append("]").toString();
+    }
+
+    @Override
+    public boolean equals(boolean[] rowA, int fromA, int toA, boolean[] rowB, int fromB) {
+        for (int i = fromA; i < toA; i++) {
+            if (rowA[i] != rowB[fromB + (i - fromA)]) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     @Override
     public Boolean get(boolean[] row, int index) {
