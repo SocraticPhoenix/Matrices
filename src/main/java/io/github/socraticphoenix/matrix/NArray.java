@@ -540,7 +540,7 @@ public class NArray<T, A> {
         Array.set(arr, loc.get(loc.size() - 1), value);
     }
 
-    public NArray<T, A> merge(IntVector loc, NArray<T, A> data) {
+    public NArray<T, A> merge(NArray<T, A> data, IntVector loc) {
         IntVector shape = loc.add(data.shape).biMap(this.shape, Math::max);
         Object array = Array.newInstance(this.type, shape.toArray());
         deepCopy(this.array, array, this.start, IntVector.zeroes(shape.size()), shape);
@@ -843,50 +843,22 @@ public class NArray<T, A> {
     }
 
     public NArray<T, A> resize(IntVector shape) {
-        Object array = Array.newInstance(this.type, shape.toArray());
-        deepResize(this.array, array, this.start, shape, this.shape, new int[this.shape.size()]);
-        return new NArray<>(array, IntVector.zeroes(shape.size()), shape, this.type);
-    }
+        NArray<T, A> res = NArray.empty(shape, this.type);
+        PositionStepper srcStepper = new PositionStepper(this.shape);
+        PositionStepper dstStepper = new PositionStepper(shape);
 
-    private static Object deepResize(Object src, Object dst, IntVector start, IntVector shape, IntVector origShape, int[] pulled) {
-        if (shape.size() == 1) {
-            return copy(src, dst, start, shape, origShape, pulled);
-        } else {
-            for (int i = 0; i < shape.get(0); i++) {
-                Array.set(dst, i, deepResize(src, Array.get(dst, i), shape.slice(1, shape.size()), start, origShape, pulled));
-            }
-            return dst;
-        }
-    }
+        while (srcStepper.hasNext() && dstStepper.hasNext()) {
+            int[] a = srcStepper.current();
+            int[] b = dstStepper.current();
 
-    private static Object copy(Object src, Object dst, IntVector start, IntVector shape, IntVector origShape, int[] pulled) {
-        int count = 0;
-        int size = shape.get(0);
-        while (count < size) {
-            Object arr = getArray(src, pulled);
-            int len = Math.min(size, origShape.get(origShape.size() - 1) - pulled[pulled.length - 1]);
-            if (len <= 0) {
-                break;
-            }
+            this.handler.move(getArray(this.array, a), a[a.length - 1],
+                    getArray(res.array, b), b[b.length - 1]);
 
-            System.arraycopy(arr, pulled[pulled.length - 1] + start.get(start.size() - 1), dst, count, len);
-
-            pulled[pulled.length - 1] += len;
-            rollover(origShape, pulled);
-
-            count += len;
+            srcStepper.moveNext();
+            dstStepper.moveNext();
         }
 
-        return dst;
-    }
-
-    private static void rollover(IntVector shape, int[] pulled) {
-        for (int i = pulled.length - 1; i > 0; i--) {
-            while (pulled[i] >= shape.get(i)) {
-                pulled[i - 1] += 1;
-                pulled[i] -= shape.get(i);
-            }
-        }
+        return res;
     }
 
     private static Object getArray(Object arr, int[] point) {

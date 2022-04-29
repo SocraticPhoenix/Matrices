@@ -40,7 +40,7 @@ public class IntVector {
     }
 
     public long product() {
-        int prod = 1;
+        long prod = 1;
         for (int i = a; i < this.b; i++) {
             prod *= this.nums[i];
         }
