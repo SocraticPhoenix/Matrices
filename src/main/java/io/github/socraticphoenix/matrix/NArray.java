@@ -260,6 +260,46 @@ public class NArray<T, A> {
         return posIterator(IntVector.zeroes(this.shape.size()), this.shape);
     }
 
+    public NArray<T, A> multiply(NArray<T, A> other, Object addition, Object multiplication) {
+        return tensorContraction(IntVector.of(this.shape.size()), other, addition, multiplication);
+    }
+
+    public NArray<T, A> tensorContraction(IntVector axes, NArray<T, A> other, Object addition, Object multiplication) {
+        IntVector shape = this.shape.slice(0, this.shape.size() - axes.size())
+                .concat(other.shape.slice(axes.size(), other.shape.size()));
+
+        IntVector contractions = axes.map(i -> this.shape.get(i - 1));
+        NArray<T, A> res = NArray.empty(shape, this.type);
+        Object temp = Array.newInstance(this.type, 1);
+
+        posIterator(IntVector.zeroes(shape.size()), shape).forEachRemaining(pos ->
+                posIterator(IntVector.zeroes(contractions.size()), contractions).forEachRemaining(contraction -> {
+                    IntVector a = pos.slice(0, this.shape.size() - axes.size())
+                            .concat(contraction);
+                    IntVector b = contraction.reverse()
+                            .concat(pos.slice(axes.size(), pos.size()));
+
+                    this.handler.map(getArray(this.array, a),
+                            getArray(other.array, b),
+                            a.get(a.size() - 1),
+                            a.get(a.size() - 1) + 1,
+                            b.get(b.size() - 1),
+                            temp,
+                            0,
+                            multiplication);
+
+                    Object row = getArray(res.array, pos);
+                    this.handler.map(temp,
+                            row,
+                            0, 1, pos.get(pos.size() - 1),
+                            row,
+                            pos.get(pos.size() - 1),
+                            addition);
+        }));
+
+        return res;
+    }
+
     public <K> Optional<K> reduce(Object mapper) {
         if (this.shape.product() == 0) {
             return Optional.empty();
@@ -852,6 +892,13 @@ public class NArray<T, A> {
     private static Object getArray(Object arr, int[] point) {
         for (int i = 0; i < point.length - 1; i++) {
             arr = Array.get(arr, point[i]);
+        }
+        return arr;
+    }
+
+    private static Object getArray(Object arr, IntVector point) {
+        for (int i = 0; i < point.size() - 1; i++) {
+            arr = Array.get(arr, point.get(i));
         }
         return arr;
     }
