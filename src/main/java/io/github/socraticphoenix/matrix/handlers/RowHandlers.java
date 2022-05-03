@@ -7,6 +7,7 @@ public interface RowHandlers {
     ObjectRowHandler OBJECT = new ObjectRowHandler();
 
     BoolRowHandler BOOLEAN = new BoolRowHandler();
+    ByteRowHandler BYTE = new ByteRowHandler();
 
     DoubleRowHandler DOUBLE = new DoubleRowHandler();
 
@@ -19,6 +20,7 @@ public interface RowHandlers {
             case Type.BOOLEAN:
                 return BOOLEAN;
             case Type.BYTE:
+                return BYTE;
             case Type.SHORT:
             case Type.CHAR:
             case Type.INT:
@@ -26,7 +28,6 @@ public interface RowHandlers {
             case Type.FLOAT:
             case Type.DOUBLE:
                 return DOUBLE;
-
             case Type.OBJECT:
             default:
                 return OBJECT;
